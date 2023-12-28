@@ -2,12 +2,13 @@ const uAPI = require('./entry');
 const config = require('./config');
 const express = require('express');
 const cors = require("cors")
+const book = require("./book")
 
 const app = express()
 app.use(cors({
-    origin:"http://localhost:5173"
+    origin: "http://localhost:5173"
 }))
-const AirService = uAPI.createAirService(
+let AirService = uAPI.createAirService(
     {
         auth: config,
         debug: 2,
@@ -17,7 +18,7 @@ const AirService = uAPI.createAirService(
 app.use(express.json());
 
 
-const params = {
+let params = {
     legs: [
         {
             from: 'WAW',
@@ -41,14 +42,14 @@ const params = {
     // preferredConnectionPoints: ['KBP'],
     // prohibitedConnectionPoints: ['DME', 'SVO', 'PAR'],
     // maxJourneyTime: 300,
-    // pricing: {
-    // currency: 'USD',
-    // eTicketability: true,
-    // },
+    pricing: {
+    currency: 'USD',
+    eTicketability: true,
+    },
     pricing: {
         currency: 'USD', // Currency to convert results prices
         eTicketability: true, // Detect if pricing solution will be ticketable as e-ticket
-      },
+    },
     includeFare: true,
 };
 
@@ -95,6 +96,73 @@ app.get('/galileo-fares', async (req, response) => {
 });
 
 
+
+
+params = {
+    legs: [
+        {
+            from: 'WAW',
+            to: 'AMS',
+            departureDate: '2023-12-29',
+        },
+        // {
+        //     from: 'PAR',
+        //     to: 'IEV',
+        //     departureDate: '2023-12-30',
+        // },
+    ],
+    passengers: {
+        ADT: 1,
+    },
+    // requestId: 'test-request',
+    // platingCarier: 'PS'
+};
+
+app.get('/book', async (req, response) => {
+
+    AirService.shop(params)
+        .then(
+            (results) => {
+                const fromSegments = results['0'].directions['0']['0'].segments;
+                const toSegments = results['0'].directions['1']['0'].segments;
+
+                const book = {
+                    segments: fromSegments.concat(toSegments),
+                    rule: 'SIP',
+                    passengers: [{
+                        lastName: 'SKYWALKER',
+                        firstName: 'ANAKIN',
+                        passCountry: 'UA',
+                        passNumber: 'ES221731',
+                        birthDate: '1968-07-25',
+                        gender: 'M',
+                        ageCategory: 'ADT',
+                    }],
+                    phone: {
+                        countryCode: '38',
+                        location: 'IEV',
+                        number: '0660419905',
+                    },
+                    deliveryInformation: {
+                        name: 'Anakin Skywalker',
+                        street: 'Sands street, 42',
+                        zip: '42042',
+                        country: 'Galactic Empire',
+                        city: 'Mos Eisley',
+                    },
+                    allowWaitlist: true,
+                };
+
+                return AirService.book(book).then(
+                    res => { return response.json(res) },
+                    err => { return response.json(err) }
+                );
+            }
+        )
+        .catch(
+            err => { return response.json(err) }
+        )
+})
 
 app.listen(5000, () => {
     console.log('Server is running on port 5000');
