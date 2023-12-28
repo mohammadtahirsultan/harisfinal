@@ -45,13 +45,46 @@ const params = {
     // currency: 'USD',
     // eTicketability: true,
     // },
+    pricing: {
+        currency: 'USD', // Currency to convert results prices
+        eTicketability: true, // Detect if pricing solution will be ticketable as e-ticket
+      },
+    includeFare: true,
 };
 
 
 // Create a route to handle SOAP requests
-app.post('/availability', async (req, response) => {
+app.get('/galileo-available', async (req, response) => {
     try {
         AirService.availability(params)
+            .then(
+                res => { return console.log(res); },
+                err => { return response.json(err) }
+            );
+    } catch (error) {
+        response.status(500).send('Internal Server Error', error.message);
+    }
+});
+
+
+
+app.get('/galileo-fares', async (req, response) => {
+    try {
+        // Create a new instance of the fare service
+        const FareService = uAPI.createFareService({
+            auth: config,
+            debug: 2,
+            production: true,
+        });
+
+        // Define parameters for the fare request
+        const fareParams = {
+            // Specify the fare-related parameters (e.g., fare basis code, passenger type, etc.)
+            // ...
+        };
+
+        // Make a request to the fare service
+        FareService.getFareInfo(fareParams)
             .then(
                 res => { return response.json(res) },
                 err => { return response.json(err) }
@@ -61,6 +94,8 @@ app.post('/availability', async (req, response) => {
     }
 });
 
+
+
 app.listen(5000, () => {
-    console.log('Server is running on port 3000');
+    console.log('Server is running on port 5000');
 })
