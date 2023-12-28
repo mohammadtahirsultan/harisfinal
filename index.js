@@ -74,15 +74,11 @@ app.get('/shop', async (req, response) => {
     const params = {
         legs: [
             {
-                from: 'KHI',
+                from: 'MUX',
                 to: 'DXB',
                 departureDate: '2024-03-30'
             },
-            {
-                from: 'MUX',
-                to: 'LHR',
-                departureDate: '2024-03-30',
-            },
+         
         ],
         passengers: {
             ADT: 1,
@@ -97,7 +93,7 @@ app.get('/shop', async (req, response) => {
         maxJourneyTime: 300,
         maxSolutions: 200,
         pricing: {
-            currency: 'USD',
+            currency: 'PKR',
             // eTicketability: true,
         },
     };
