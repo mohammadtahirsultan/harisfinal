@@ -2,7 +2,6 @@ const express = require('express');
 const soap = require('soap');
 const fs = require('fs');
 const path = require('path');
-// const { http } = require('strong-soap');
 const http = require("http")
 const app = express();
 const bodyParser = require("body-parser")
