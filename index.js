@@ -18,48 +18,114 @@ let AirService = uAPI.createAirService(
 app.use(express.json());
 
 
-let params = {
-    legs: [
-        {
-            from: 'WAW',
-            to: 'AMS',
-            departureDate: '2023-12-29',
-        },
-    ],
-    passengers: {
-        ADT: 1,
-        /*
-         CNN:1,
-         INF: 1,
-         INS: 1, //infant with a seat
-         */
-    },
-    permittedCarriers: ['LO'],
-    cabins: ['Economy'], // ['Business'],
-    bookingCodes: ['Q', 'G'],
-    requestId: '4e2fd1f8-2221-4b6c-bb6e-cf05c367cf60',
-    // permittedConnectionPoints: ['AMS'],
-    // preferredConnectionPoints: ['KBP'],
-    // prohibitedConnectionPoints: ['DME', 'SVO', 'PAR'],
-    // maxJourneyTime: 300,
-    pricing: {
-    currency: 'USD',
-    eTicketability: true,
-    },
-    pricing: {
-        currency: 'USD', // Currency to convert results prices
-        eTicketability: true, // Detect if pricing solution will be ticketable as e-ticket
-    },
-    includeFare: true,
-};
 
 
 // Create a route to handle SOAP requests
 app.get('/galileo-available', async (req, response) => {
+    let params = {
+        legs: [
+            {
+                from: 'WAW',
+                to: 'AMS',
+                departureDate: '2023-12-29',
+            },
+        ],
+        passengers: {
+            ADT: 1,
+            /*
+             CNN:1,
+             INF: 1,
+             INS: 1, //infant with a seat
+             */
+        },
+        permittedCarriers: ['LO'],
+        cabins: ['Economy'], // ['Business'],
+        bookingCodes: ['Q', 'G'],
+        requestId: '4e2fd1f8-2221-4b6c-bb6e-cf05c367cf60',
+        // permittedConnectionPoints: ['AMS'],
+        // preferredConnectionPoints: ['KBP'],
+        // prohibitedConnectionPoints: ['DME', 'SVO', 'PAR'],
+        // maxJourneyTime: 300,
+        pricing: {
+            currency: 'USD',
+            eTicketability: true,
+        },
+        pricing: {
+            currency: 'USD', // Currency to convert results prices
+            eTicketability: true, // Detect if pricing solution will be ticketable as e-ticket
+        },
+        includeFare: true,
+    };
+
     try {
         AirService.availability(params)
             .then(
-                res => { return console.log(res); },
+                res => { return response.log(res); },
+                err => { return response.json(err) }
+            );
+    } catch (error) {
+        response.status(500).send('Internal Server Error', error.message);
+    }
+});
+
+// Create a route to handle SOAP requests
+app.get('/shop', async (req, response) => {
+
+    const params = {
+        legs: [
+            {
+                from: 'KHI',
+                to: 'DXB',
+                departureDate: '2024-03-30'
+            },
+            {
+                from: 'MUX',
+                to: 'LHR',
+                departureDate: '2024-03-30',
+            },
+        ],
+        passengers: {
+            ADT: 1,
+            /*
+             CNN:1,
+             INF: 1,
+             INS: 1, //infant with a seat
+             */
+        },
+        cabins: ['Economy'], // ['Business'],
+        requestId: '4e2fd1f8-2221-4b6c-bb6e-cf05c367cf60',
+        maxJourneyTime: 300,
+        maxSolutions: 200,
+        pricing: {
+            currency: 'USD',
+            // eTicketability: true,
+        },
+    };
+
+
+    AirService.shop(params).then(
+        data => { return response.json(data) },
+        err => { return response.json(err) }
+    );
+
+});
+
+// Create a route to handle SOAP requests
+app.get('/flight-info', async (req, response) => {
+    const params = {
+        airline: 'OS',
+        flightNumber: '703',
+        departure: '2023-12-30',
+    };
+
+    AirService.flightInfo(params).then(
+        data => { return response.json(data) },
+        err => { return response.json(err) }
+    );
+    try {
+        AirService.availability(params)
+            .then(
+                res => { return response.json(res); },
                 err => { return response.json(err) }
             );
     } catch (error) {
