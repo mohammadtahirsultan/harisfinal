@@ -19,63 +19,19 @@ app.use(express.json());
 
 
 
-
-// // Create a route to handle SOAP requests
-// app.get('/galileo-available', async (req, response) => {
-//     let params = {
-//         legs: [
-//             {
-//                 from: 'WAW',
-//                 to: 'AMS',
-//                 departureDate: '2023-12-29',
-//             },
-//         ],
-//         passengers: {
-//             ADT: 1,
-//             /*
-//              CNN:1,
-//              INF: 1,
-//              INS: 1, //infant with a seat
-//              */
-//         },
-//         permittedCarriers: ['LO'],
-//         cabins: ['Economy'], // ['Business'],
-//         bookingCodes: ['Q', 'G'],
-//         requestId: '4e2fd1f8-2221-4b6c-bb6e-cf05c367cf60',
-//         // permittedConnectionPoints: ['AMS'],
-//         // preferredConnectionPoints: ['KBP'],
-//         // prohibitedConnectionPoints: ['DME', 'SVO', 'PAR'],
-//         // maxJourneyTime: 300,
-//         pricing: {
-//             currency: 'USD',
-//             eTicketability: true,
-//         },
-//         pricing: {
-//             currency: 'USD', // Currency to convert results prices
-//             eTicketability: true, // Detect if pricing solution will be ticketable as e-ticket
-//         },
-//         includeFare: true,
-//     };
-
-//     try {
-//         AirService.availability(params)
-//             .then(
-//                 res => { return response.log(res); },
-//                 err => { return response.json(err) }
-//             );
-//     } catch (error) {
-//         response.status(500).send('Internal Server Error', error.message);
-//     }
-// });
-
 //1.  Create a route to handle SOAP requests, to fetch the available flights and fares.
 app.get('/shop', async (req, response) => {
     const params = {
         legs: [
             {
-                from: 'KHI',
+                from: 'MUX',
                 to: 'DXB',
                 departureDate: '2024-03-30'
+            },
+            {
+                from: 'MUX',
+                to: 'LHR',
+                departureDate: '2024-03-30',
             },
         ],
         passengers: {
@@ -83,23 +39,19 @@ app.get('/shop', async (req, response) => {
         },
         cabins: ['Economy'],
         pricing: {
-            currency: 'PKR',
+            currency: 'USD',
+            // eTicketability: true,
         },
-        includeFare: true,
     };
 
-    AirService.shop(params)
-        .then(
-            data => {
-                response.json({ shopData: data });
-            },
-            err => response.json({ shopDataError: err })
-        )
-        .catch(err => {
-            console.error(err);
-            response.json({ error: 'An unexpected error occurred.' });
-        });
+
+    AirService.shop(params).then(
+        data => { return response.json(data) },
+        err => { return response.json(err) }
+    );
+
 });
+
 
 
 
