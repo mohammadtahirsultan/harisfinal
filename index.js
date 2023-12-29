@@ -31,7 +31,7 @@ let AirService = uAPI.createAirService(
 app.post('/shop-oneway', async (req, response) => {
     try {
         console.log("I am body", req.body);
-        let { from, to, departureDate, returnDate } = req.body;
+        let { from, to, departureDate } = req.body;
 
         if (!from || !to || !departureDate) {
             return response.status(400).json({ error: 'Missing required parameters' });
@@ -64,7 +64,7 @@ app.post('/shop-oneway', async (req, response) => {
 // -----------------   ROUND TRIP REQUEST  -----------------------
 app.post('/shop-rounded', async (req, response) => {
     try {
-        const { from, to, departureDate, returnDate } = req.query;
+        const { from, to, departureDate, returnDate } = req.body;
 
         if (!from || !to || !departureDate || !returnDate) {
             return response.status(400).json({ error: 'Missing required parameters' });
@@ -100,6 +100,49 @@ app.post('/shop-rounded', async (req, response) => {
         return response.status(500).json({ error: 'An error occurred' });
     }
 });
+
+
+
+// -----------------   Multi City Request  -----------------------
+app.post('/shop-multi', async (req, response) => {
+    try {
+        const { from, to, departureDate, returnDate } = req.body;
+
+        if (!from || !to || !departureDate || !returnDate) {
+            return response.status(400).json({ error: 'Missing required parameters' });
+        }
+
+        const params = {
+            legs: [
+                {
+                    from,
+                    to,
+                    departureDate,
+                },
+                {
+                    from: to, // Swap 'from' and 'to' for the return leg
+                    to: from,
+                    departureDate: returnDate, // Use the provided returnDate
+                },
+            ],
+            passengers: {
+                ADT: 1,
+            },
+            cabins: ['Economy'],
+            pricing: {
+                currency: 'PKR',
+                eTicketability: true,
+            },
+        };
+
+        const data = await AirService.shop(params);
+        return response.json(data);
+    } catch (err) {
+        console.error('Error:', err);
+        return response.status(500).json({ error: 'An error occurred' });
+    }
+});
+
 
 
 // 2. now we have to book the flight
