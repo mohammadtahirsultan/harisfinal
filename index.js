@@ -106,23 +106,28 @@ app.post('/shop-rounded', async (req, response) => {
 // -----------------   Multi City Request  -----------------------
 app.post('/shop-multi', async (req, response) => {
     try {
-        const { from, to, departureDate, returnDate } = req.body;
+        // const { from, to, departureDate, returnDate } = req.body;
 
-        if (!from || !to || !departureDate || !returnDate) {
-            return response.status(400).json({ error: 'Missing required parameters' });
-        }
+        // if (!from || !to || !departureDate || !returnDate) {
+        //     return response.status(400).json({ error: 'Missing required parameters' });
+        // }
 
         const params = {
             legs: [
                 {
-                    from,
-                    to,
-                    departureDate,
+                    from: 'MUX',
+                    to: 'DXB',
+                    departureDate: '2024-02-10'
                 },
                 {
-                    from: to, // Swap 'from' and 'to' for the return leg
-                    to: from,
-                    departureDate: returnDate, // Use the provided returnDate
+                    from: 'DXB',
+                    to: 'MUX',
+                    departureDate: '2024-02-20'
+                },
+                {
+                    from: 'MUX',
+                    to: 'JFK',
+                    departureDate: '2024-02-24'
                 },
             ],
             passengers: {
