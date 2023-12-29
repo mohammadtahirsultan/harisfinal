@@ -18,9 +18,9 @@ let AirService = uAPI.createAirService(
 app.use(express.json());
 
 
-
+// -----------------   ONE WAY REQUEST  -----------------------
 //1.  Create a route to handle SOAP requests, to fetch the available flights and fares.
-app.get('/shop', async (req, response) => {
+app.get('/shop-oneway', async (req, response) => {
     const params = {
         legs: [
             {
@@ -53,8 +53,39 @@ app.get('/shop', async (req, response) => {
 });
 
 
+// -----------------   ROUND TRIP REQUEST  -----------------------
+app.get('/shop-rounded', async (req, response) => {
+    const params = {
+        legs: [
+            {
+                from: 'MUX',
+                to: 'DXB',
+                departureDate: '2024-03-30'
+            },
+            {
+                from: 'DXB',
+                to: 'MUX', // Return leg
+                departureDate: '2024-04-05', // Adjust the return date as needed
+            },
+        ],
+
+        passengers: {
+            ADT: 1,
+        },
+        cabins: ['Economy'],
+        pricing: {
+            currency: 'USD',
+            // eTicketability: true,
+        },
+    };
 
 
+    AirService.shop(params).then(
+        data => { return response.json(data) },
+        err => { return response.json(err) }
+    );
+
+});
 
 
 // 2. now we have to book the flight
