@@ -152,7 +152,7 @@ app.post('/shop-multi', async (req, response) => {
         return response.json(data);
     } catch (err) {
         console.error('Error:', err);
-        return response.status(500).json({ error: 'An error occurred' });
+        return response.status(500).json({ error: 'An error occurred', err });
     }
 });
 
