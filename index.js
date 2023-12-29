@@ -35,7 +35,7 @@ app.get('/shop-oneway', async (req, response) => {
         cabins: ['Economy'],
         pricing: {
             currency: 'PKR',
-            // eTicketability: true,
+            eTicketability: true,
         },
     };
 
