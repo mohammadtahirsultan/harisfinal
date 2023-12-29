@@ -31,9 +31,9 @@ let AirService = uAPI.createAirService(
 app.post('/shop-oneway', async (req, response) => {
     try {
         console.log("I am body", req.body);
-        let { from, to, departureDate } = req.body;
+        let { from, to, departureDate, returnDate } = req.body;
 
-        if (!from || !to || !departureDate) {
+        if (!from || !to || !departureDate || !returnDate) {
             return response.status(400).json({ error: 'Missing required parameters' });
         }
         const params = {
@@ -64,7 +64,7 @@ app.post('/shop-oneway', async (req, response) => {
 // -----------------   ROUND TRIP REQUEST  -----------------------
 app.post('/shop-rounded', async (req, response) => {
     try {
-        const { from, to, departureDate, returnDate } = req.body;
+        const { from, to, departureDate, returnDate } = req.query;
 
         if (!from || !to || !departureDate || !returnDate) {
             return response.status(400).json({ error: 'Missing required parameters' });
