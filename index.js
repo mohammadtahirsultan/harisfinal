@@ -54,7 +54,7 @@ app.post('/shop-oneway', async (req, response) => {
         return response.json(data);
     } catch (err) {
         console.error('Error:', err);
-        return response.status(500).json({ error: ${err.name} });
+        return response.status(500).json({ error:` ${err.name} `});
     }
 });
 
