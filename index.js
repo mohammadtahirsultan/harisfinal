@@ -28,18 +28,13 @@ app.get('/shop-oneway', async (req, response) => {
                 to: 'DXB',
                 departureDate: '2024-03-30'
             },
-            {
-                from: 'MUX',
-                to: 'LHR',
-                departureDate: '2024-03-30',
-            },
         ],
         passengers: {
             ADT: 1,
         },
         cabins: ['Economy'],
         pricing: {
-            currency: 'USD',
+            currency: 'PKR',
             // eTicketability: true,
         },
     };
