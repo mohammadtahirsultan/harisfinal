@@ -171,12 +171,12 @@ module.exports = function uapiRequest(
       return parsedXML;
     };
 
-  const handleSuccess = function (result) {
+    const handleSuccess = function (result) {
       if (debugMode > 1) {
         if (typeof result === 'string') {
-          log('Returning result, yeh lo', result);
+          log('Returning result, yeh lo');
         } else {
-          log('Returning result, ithe rakh', pd.json(result));
+          log('Returning result, ithe rakh');
         }
       }
       return result;

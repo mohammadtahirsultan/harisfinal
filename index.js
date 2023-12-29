@@ -31,7 +31,7 @@ let AirService = uAPI.createAirService(
 app.post('/shop-oneway', async (req, response) => {
     try {
         console.log("I am body", req.body);
-        let { from, to, departureDate } = req.body;
+        let { from, to, departureDate, cabin } = req.body;
 
         if (!from || !to || !departureDate) {
             return response.status(400).json({ error: 'Missing required parameters' });
@@ -47,10 +47,11 @@ app.post('/shop-oneway', async (req, response) => {
             passengers: {
                 ADT: 1,
             },
-            cabins: ['Economy'],
+            cabins: [cabin],
             pricing: {
                 currency: 'PKR',
             },
+
         };
 
         const data = await AirService.shop(params);
