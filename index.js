@@ -24,20 +24,37 @@ app.get('/shop-oneway', async (req, response) => {
     const params = {
         legs: [
             {
-                from: 'MUX',
-                to: 'DXB',
-                departureDate: '2024-03-30'
+                from: 'MUX',               // Departure city code
+                to: 'DXB',                 // Destination city code
+                departureDate: '2024-03-30' // Departure date
             },
         ],
         passengers: {
-            ADT: 1,
+            ADT: 1, // Number of adult passengers
+            // Uncomment and adjust the following lines for other passenger types if needed
+            // CNN: 1, // Number of children
+            // INF: 1, // Number of infants without a seat
+            // INS: 1, // Number of infants with a seat
         },
-        cabins: ['Economy'],
+        cabins: ['Economy'], // Cabin class (you can also include 'Business' if needed)
         pricing: {
-            currency: 'PKR',
-            eTicketability: true,
+            currency: 'PKR',       // Currency for pricing
+            eTicketability: true,  // Whether e-ticketing is required or not
         },
+        // Uncomment the following lines if you need additional parameters
+        // requestId: 'your-request-id',    // Optional: Your request identifier
+        // maxJourneyTime: 300,              // Optional: Maximum journey time in minutes
+        // maxSolutions: 200,                // Optional: Maximum number of solutions
+        includeFare: true,                // Optional: Include fare information in the response
+        asynch: true,                     // Optional: Make the request LFS
     };
+    
+    // Use the params in your AirService.shop call
+    AirService.shop(params)
+        .then(
+            data => console.log(data), // Uncomment if you want to log the response data
+            err => console.error(err)   // Uncomment if you want to log any errors
+        );
 
 
     AirService.shop(params).then(
@@ -65,13 +82,23 @@ app.get('/shop-rounded', async (req, response) => {
         ],
 
         passengers: {
-            ADT: 1,
+            ADT: 1, // Number of adult passengers
+            // Uncomment and adjust the following lines for other passenger types if needed
+            // CNN: 1, // Number of children
+            // INF: 1, // Number of infants without a seat
+            // INS: 1, // Number of infants with a seat
         },
-        cabins: ['Economy'],
+        cabins: ['Economy'], // Cabin class (you can also include 'Business' if needed)
         pricing: {
-            currency: 'USD',
-            // eTicketability: true,
+            currency: 'PKR',       // Currency for pricing
+            eTicketability: true,  // Whether e-ticketing is required or not
         },
+        asynch: false,   //to make it the lfs request
+        // Uncomment the following lines if you need additional parameters
+        // requestId: 'your-request-id',    // Optional: Your request identifier
+        // maxJourneyTime: 300,              // Optional: Maximum journey time in minutes
+        // maxSolutions: 200,                // Optional: Maximum number of solutions
+        includeFare: true,                // Optional: Include fare information in the response
     };
 
 
