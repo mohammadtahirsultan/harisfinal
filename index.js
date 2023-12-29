@@ -33,7 +33,7 @@ app.post('/shop-oneway', async (req, response) => {
         console.log("I am body", req.body);
         let { from, to, departureDate, returnDate } = req.body;
 
-        if (!from || !to || !departureDate || !returnDate) {
+        if (!from || !to || !departureDate) {
             return response.status(400).json({ error: 'Missing required parameters' });
         }
         const params = {
