@@ -106,30 +106,38 @@ app.post('/shop-rounded', async (req, response) => {
 // -----------------   Multi City Request  -----------------------
 app.post('/shop-multi', async (req, response) => {
     try {
-        // const { from, to, departureDate, returnDate } = req.body;
+        const { routes } = req.body;
 
-        // if (!from || !to || !departureDate || !returnDate) {
-        //     return response.status(400).json({ error: 'Missing required parameters' });
-        // }
+        console.log(req.body);
+        if (!Array.isArray(routes) || routes.length === 0) {
+            return response.status(400).json({ error: 'Invalid or empty routes array' });
+        }
 
+        const legs = routes.map(route => ({
+            from: route.from,
+            to: route.to,
+            departureDate: route.depart,
+        }));
         const params = {
-            legs: [
-                {
-                    from: 'MUX',
-                    to: 'DXB',
-                    departureDate: '2024-02-10'
-                },
-                {
-                    from: 'DXB',
-                    to: 'MUX',
-                    departureDate: '2024-02-20'
-                },
-                {
-                    from: 'MUX',
-                    to: 'JFK',
-                    departureDate: '2024-02-24'
-                },
-            ],
+            // legs: [
+
+            //     {
+            //         from: 'MUX',
+            //         to: 'DXB',
+            //         departureDate: '2024-02-10'
+            //     },
+            //     {
+            //         from: 'DXB',
+            //         to: 'MUX',
+            //         departureDate: '2024-02-20'
+            //     },
+            //     {
+            //         from: 'MUX',
+            //         to: 'JFK',
+            //         departureDate: '2024-02-24'
+            //     },
+            // ],
+            legs,
             passengers: {
                 ADT: 1,
             },
