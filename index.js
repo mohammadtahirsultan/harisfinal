@@ -158,37 +158,7 @@ app.post('/shop-multi', async (req, response) => {
 });
 
 
-
-// 2. now we have to book the flight
-// before booking we need to fetch the fare rules, to check if the flight is refundable or not and other things too
-app.get('/fare-rules', async (req, response) => {
-    // Assume you have received the shop data or fetch it from the shop API
-    const shopDataResponse = await fetch('http://localhost:5000/shop');
-    const shopData = await shopDataResponse.json();
-
-    // Extract necessary information
-    const forwardSegments = shopData['0'].directions['0']['0'].segments;
-    const backSegments = shopData['0'].directions['1']['0'].segments;
-
-    const fareRulesParams = {
-        segments: forwardSegments.concat(backSegments),
-        passengers: { ADT: 1 }, // Update with actual passenger information
-        long: true,
-        requestId: 'test',
-    };
-
-    // Make the fare rules request
-    AirService.fareRules(fareRulesParams)
-        .then(
-            fareRules => response.json({ fareRules: fareRules }),
-            err => response.json({ fareRulesError: err })
-        )
-        .catch(err => {
-            console.error(err);
-            response.json({ error: 'An unexpected error occurred.' });
-        });
-});
-
+// -----------------   BOOKING REQUEST  -----------------------
 app.get('/book', async (req, response) => {
     try {
         const params = {
