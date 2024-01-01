@@ -189,6 +189,78 @@ app.get('/fare-rules', async (req, response) => {
         });
 });
 
+app.get('/book', async (req, response) => {
+    try {
+        const params = {
+            legs: [
+                {
+                    from: 'JFK',
+                    to: 'LHR',
+                    departureDate: '2024-02-10',
+                },
+                {
+                    from: 'LHR',
+                    to: 'JFK',
+                    departureDate: '2024-02-20',
+                },
+            ],
+            passengers: {
+                ADT: 1,
+            },
+            requestId: 'test-request',
+            platingCarier: 'PS'
+        };
+
+        const results = await AirService.shop(params);
+
+        if (!results) {
+            return response.status(400).json('No flights found for given parameters');
+        }
+
+        // Check if the results contain an error
+        if (results.error) {
+            return response.status(500).json({ error: 'An error occurred', details: results.error });
+        }
+
+        const fromSegments = results?.[0]?.directions?.[0]?.[0]?.segments || [];
+        const toSegments = results?.[0]?.directions?.[1]?.[0]?.segments || [];
+
+        // return response.json({ fromSegments, toSegments, results })
+        let book = {
+            segments: fromSegments?.concat(toSegments),
+            rule: 'SIP',
+            passengers: [{
+                lastName: 'SKYWALKER',
+                firstName: 'ANAKIN',
+                passCountry: 'UA',
+                passNumber: 'J12393496',
+                birthDate: '1968-07-25',
+                gender: 'M',
+                ageCategory: 'ADT',
+            }],
+            phone: {
+                countryCode: '38',
+                location: 'IEV',
+                number: '0660419905',
+            },
+            deliveryInformation: {
+                name: 'Anakin Skywalker',
+                street: 'Sands street, 42',
+                zip: '42042',
+                country: 'Galactic Empire',
+                city: 'Mos Eisley',
+            },
+            allowWaitlist: true,
+        };
+
+        const res = await AirService.book(book);
+        return response.json(res);
+    } catch (err) {
+        console.log('Error:', err);
+        return response.status(500).json({ error: 'An error occurred', err });
+    }
+});
+
 
 
 // 3. now we have to book the flight

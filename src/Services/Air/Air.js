@@ -72,6 +72,7 @@ module.exports = (settings) => {
 
     book(options) {
       return service.airPricePricingSolutionXML(options).then((data) => {
+        console.log("I am Janu");
         const tauDate = moment(options.tau || null);
         const tau = tauDate.isValid() ? tauDate.format() : moment().add(3, 'hours').format();
         const bookingParams = {
@@ -80,9 +81,13 @@ module.exports = (settings) => {
           ...data,
           ...options
         };
+        
+        console.log('I am bookingParams', bookingParams);
+        
         return service.createReservation(bookingParams).catch((err) => {
+          console.log("I am Heroin");
           if (err instanceof AirRuntimeError.SegmentBookingFailed
-              || err instanceof AirRuntimeError.NoValidFare) {
+            || err instanceof AirRuntimeError.NoValidFare) {
             if (options.allowWaitlist) { // will not have a UR if waitlisting restricted
               const code = err.data['universal:UniversalRecord'].LocatorCode;
               return service.cancelUR({
