@@ -159,8 +159,36 @@ app.post('/shop-multi', async (req, response) => {
 
 
 
+// 2. now we have to book the flight
+// before booking we need to fetch the fare rules, to check if the flight is refundable or not and other things too
+app.get('/fare-rules', async (req, response) => {
+    // Assume you have received the shop data or fetch it from the shop API
+    const shopDataResponse = await fetch('http://localhost:5000/shop');
+    const shopData = await shopDataResponse.json();
 
-// -----------------   BOOKING REQUEST  -----------------------
+    // Extract necessary information
+    const forwardSegments = shopData['0'].directions['0']['0'].segments;
+    const backSegments = shopData['0'].directions['1']['0'].segments;
+
+    const fareRulesParams = {
+        segments: forwardSegments.concat(backSegments),
+        passengers: { ADT: 1 }, // Update with actual passenger information
+        long: true,
+        requestId: 'test',
+    };
+
+    // Make the fare rules request
+    AirService.fareRules(fareRulesParams)
+        .then(
+            fareRules => response.json({ fareRules: fareRules }),
+            err => response.json({ fareRulesError: err })
+        )
+        .catch(err => {
+            console.error(err);
+            response.json({ error: 'An unexpected error occurred.' });
+        });
+});
+
 app.get('/book', async (req, response) => {
     try {
         const params = {
@@ -199,34 +227,35 @@ app.get('/book', async (req, response) => {
 
         // return response.json({ fromSegments, toSegments, results })
         let book = {
-            segments: [
-                {
-                    departure: '2024-02-25T00:20:00.000-05:00',
-                    arrival: '2024-02-25T12:00:00.000+00:00',
-                    airline: 'TP',
-                    from: 'EWR',
-                    to: 'OPO',
-                    flightNumber: '212',
-                    plane: 'K',
-                    serviceClass: 'Economy',
-                    fareBasisCode: 'KL0BSI03',
-                    group: '0',
-                    bookingClass: 'K',
-                },
-                {
-                    departure: '2024-02-26T07:45:00.000+00:00',
-                    arrival: '2024-02-26T10:00:00.000+00:00',
-                    airline: 'TP',
-                    from: 'OPO',
-                    to: 'LGW',
-                    flightNumber: '1328',
-                    plane: 'K',
-                    serviceClass: 'Economy',
-                    fareBasisCode: 'KL0BSI03',
-                    group: '0',
-                    bookingClass: 'K',
-                },
-            ],
+            segments: fromSegments.concat(toSegments),
+            // segments: [
+            //     {
+            //         departure: '2024-02-25T00:20:00.000-05:00',
+            //         arrival: '2024-02-25T12:00:00.000+00:00',
+            //         airline: 'TP',
+            //         from: 'EWR',
+            //         to: 'OPO',
+            //         flightNumber: '212',
+            //         plane: 'K',
+            //         serviceClass: 'Economy',
+            //         fareBasisCode: 'KL0BSI03',
+            //         group: '0',
+            //         bookingClass: 'K',
+            //     },
+            //     {
+            //         departure: '2024-02-26T07:45:00.000+00:00',
+            //         arrival: '2024-02-26T10:00:00.000+00:00',
+            //         airline: 'TP',
+            //         from: 'OPO',
+            //         to: 'LGW',
+            //         flightNumber: '1328',
+            //         plane: 'K',
+            //         serviceClass: 'Economy',
+            //         fareBasisCode: 'KL0BSI03',
+            //         group: '0',
+            //         bookingClass: 'K',
+            //     },
+            // ],
             rule: 'SIP',
             passengers: [
                 {
@@ -243,13 +272,6 @@ app.get('/book', async (req, response) => {
                 countryCode: '1',
                 location: 'DEN',
                 number: '123456789',
-            },
-            deliveryInformation: {
-                name: 'DemoSiteAddress',
-                street: 'Via Augusta 59 5',
-                zip: '50156',
-                country: 'US',
-                city: 'Madrid',
             },
             allowWaitlist: true,
         };
