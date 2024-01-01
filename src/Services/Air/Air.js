@@ -82,7 +82,6 @@ module.exports = (settings) => {
           ...options
         };
         
-        console.log('I am bookingParams', bookingParams);
         
         return service.createReservation(bookingParams).catch((err) => {
           console.log("I am Heroin");

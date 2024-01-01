@@ -196,19 +196,19 @@ app.get('/book', async (req, response) => {
                 {
                     from: 'JFK',
                     to: 'LHR',
-                    departureDate: '2024-02-10',
+                    departureDate: '2024-02-22',
                 },
-                {
-                    from: 'LHR',
-                    to: 'JFK',
-                    departureDate: '2024-02-20',
-                },
+                // {
+                //     from: 'LHR',
+                //     to: 'JFK',
+                //     departureDate: '2024-02-10',
+                // },
             ],
             passengers: {
                 ADT: 1,
             },
             requestId: 'test-request',
-            platingCarier: 'PS'
+            platingCarier: 'VS'
         };
 
         const results = await AirService.shop(params);
@@ -227,28 +227,57 @@ app.get('/book', async (req, response) => {
 
         // return response.json({ fromSegments, toSegments, results })
         let book = {
-            segments: fromSegments?.concat(toSegments),
+            segments: [
+                {
+                    departure: '2024-02-25T00:20:00.000-05:00',
+                    arrival: '2024-02-25T12:00:00.000+00:00',
+                    airline: 'TP',
+                    from: 'EWR',
+                    to: 'OPO',
+                    flightNumber: '212',
+                    plane: 'K',
+                    serviceClass: 'Economy',
+                    fareBasisCode: 'KL0BSI03',
+                    group: '0',
+                    bookingClass: 'K',
+                },
+                {
+                    departure: '2024-02-26T07:45:00.000+00:00',
+                    arrival: '2024-02-26T10:00:00.000+00:00',
+                    airline: 'TP',
+                    from: 'OPO',
+                    to: 'LGW',
+                    flightNumber: '1328',
+                    plane: 'K',
+                    serviceClass: 'Economy',
+                    fareBasisCode: 'KL0BSI03',
+                    group: '0',
+                    bookingClass: 'K',
+                },
+            ],
             rule: 'SIP',
-            passengers: [{
-                lastName: 'SKYWALKER',
-                firstName: 'ANAKIN',
-                passCountry: 'UA',
-                passNumber: 'J12393496',
-                birthDate: '1968-07-25',
-                gender: 'M',
-                ageCategory: 'ADT',
-            }],
+            passengers: [
+                {
+                    lastName: 'Smith',
+                    firstName: 'John',
+                    passCountry: 'US',
+                    passNumber: 'S12345678',
+                    birthDate: '1984-01-01',
+                    gender: 'M',
+                    ageCategory: 'ADT',
+                },
+            ],
             phone: {
-                countryCode: '38',
-                location: 'IEV',
-                number: '0660419905',
+                countryCode: '1',
+                location: 'DEN',
+                number: '123456789',
             },
             deliveryInformation: {
-                name: 'Anakin Skywalker',
-                street: 'Sands street, 42',
-                zip: '42042',
-                country: 'Galactic Empire',
-                city: 'Mos Eisley',
+                name: 'DemoSiteAddress',
+                street: 'Via Augusta 59 5',
+                zip: '50156',
+                country: 'US',
+                city: 'Madrid',
             },
             allowWaitlist: true,
         };
