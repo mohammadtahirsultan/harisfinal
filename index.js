@@ -2,7 +2,6 @@ const uAPI = require('./entry');
 const config = require('./config');
 const express = require('express');
 const cors = require("cors")
-const book = require("./book");
 const bodyParser = require('body-parser');
 
 const app = express()
