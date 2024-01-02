@@ -3,6 +3,7 @@ const config = require('./config');
 const express = require('express');
 const cors = require("cors")
 const bodyParser = require('body-parser');
+const { MyWallet } = require('./src/model/wallet');
 
 const app = express()
 
@@ -253,7 +254,19 @@ app.get('/book', async (req, response) => {
     }
 });
 
-
+app.post("/add-credit", async (req, res) => {
+    try {
+        const { owner, name } = req.body
+        if (!owner || !name) throw new Error("Missing required fields");
+        const transaction = await MyWallet.create({ owner, name });
+        return res.json(transaction);
+    } catch (error) {
+        return res.json({
+            success: true,
+            error: error.message
+        })
+    }
+})
 app.listen(5000, () => {
     console.log('Server is running on port 5000');
 })
