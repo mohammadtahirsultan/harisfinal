@@ -4,6 +4,7 @@ const express = require('express');
 const cors = require("cors")
 const bodyParser = require('body-parser');
 const { MyWallet } = require('./src/model/wallet');
+const { connectDB } = require('./src/database/db');
 
 const app = express()
 
@@ -14,7 +15,7 @@ app.use(cors({
 app.use(express.json());
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
-
+connectDB()
 
 // Starting the Game of Travelport 
 let AirService = uAPI.createAirService(
@@ -262,7 +263,7 @@ app.post("/add-credit", async (req, res) => {
         return res.json(transaction);
     } catch (error) {
         return res.json({
-            success: true,
+            success: false,
             error: error.message
         })
     }

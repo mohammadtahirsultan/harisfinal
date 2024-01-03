@@ -1,6 +1,7 @@
-const { Schema } = require("mongoose");
+const mongoose = require("mongoose");
+
 //wallet schema for the user's wallets
-const Wallet = new Schema({
+const Wallet = new mongoose.Schema({
     //user id who own this wallet
     owner: { type: String, required: true },
     //name of the wallet
