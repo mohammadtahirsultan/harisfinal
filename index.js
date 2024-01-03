@@ -3,8 +3,8 @@ const config = require('./config');
 const express = require('express');
 const cors = require("cors")
 const bodyParser = require('body-parser');
-const { MyWallet } = require('./src/model/wallet');
 const { connectDB } = require('./src/database/db');
+const walletRoutes = require('./src/routes/wallet');
 
 const app = express()
 
@@ -16,6 +16,7 @@ app.use(express.json());
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 connectDB()
+app.use("/wallet",walletRoutes)
 
 // Starting the Game of Travelport 
 let AirService = uAPI.createAirService(
@@ -255,19 +256,7 @@ app.get('/book', async (req, response) => {
     }
 });
 
-app.post("/add-credit", async (req, res) => {
-    try {
-        const { owner, name } = req.body
-        if (!owner || !name) throw new Error("Missing required fields");
-        const transaction = await MyWallet.create({ owner, name });
-        return res.json(transaction);
-    } catch (error) {
-        return res.json({
-            success: false,
-            error: error.message
-        })
-    }
-})
+
 app.listen(5000, () => {
     console.log('Server is running on port 5000');
 })
