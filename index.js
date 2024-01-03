@@ -104,8 +104,6 @@ app.post('/shop-rounded', async (req, response) => {
     }
 });
 
-
-
 // -----------------   Multi City Request  -----------------------
 app.post('/shop-multi', async (req, response) => {
     try {
@@ -158,7 +156,6 @@ app.post('/shop-multi', async (req, response) => {
         return response.status(500).json({ error: 'An error occurred', err });
     }
 });
-
 
 // -----------------   BOOKING REQUEST  -----------------------
 app.get('/book', async (req, response) => {
@@ -255,7 +252,6 @@ app.get('/book', async (req, response) => {
         return response.status(500).json({ error: 'An error occurred', err });
     }
 });
-
 
 app.listen(5000, () => {
     console.log('Server is running on port 5000');
