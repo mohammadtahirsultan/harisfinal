@@ -109,7 +109,7 @@ app.post('/shop-rounded', async (req, response) => {
         const data = await AirService.shop(params);
         // Check if res is an array and each element is an object
         if (Array.isArray(data) && data.every(item => typeof item === 'object' && item !== null)) {
-            // Add "flightType": "OneWay" to each object in the array
+            // Add "flightType": "Rounded" to each object in the array
             data.forEach(item => {
                 item.flightType = "Rounded";
             });
@@ -154,7 +154,7 @@ app.post('/shop-multi', async (req, response) => {
         const data = await AirService.shop(params);
         // Check if res is an array and each element is an object
         if (Array.isArray(data) && data.every(item => typeof item === 'object' && item !== null)) {
-            // Add "flightType": "OneWay" to each object in the array
+            // Add "flightType": "MultiCity" to each object in the array
             data.forEach(item => {
                 item.flightType = "MultiCity";
             });
