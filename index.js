@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 connectDB()
-app.use("/wallet",walletRoutes)
+app.use("/wallet", walletRoutes)
 
 // Starting the Game of Travelport 
 let AirService = uAPI.createAirService(
@@ -73,6 +73,7 @@ app.post('/shop-rounded', async (req, response) => {
             return response.status(400).json({ error: 'Missing required parameters' });
         }
 
+
         const params = {
             legs: [
                 {
@@ -100,7 +101,7 @@ app.post('/shop-rounded', async (req, response) => {
         return response.json(data);
     } catch (err) {
         console.error('Error:', err);
-        return response.status(500).json({ error: 'An error occurred' });
+        return response.status(500).json({ error: 'An error occurred', err });
     }
 });
 
