@@ -56,7 +56,7 @@ exports.updateTransaction = async (req, res) => {
 // Delete a transaction by ID
 exports.deleteTransaction = async (req, res) => {
   try {
-    const deletedTransaction = await MyWallet.findByIdAndRemove(req.params.id);
+    const deletedTransaction = await MyWallet.findByIdAndDelete(req.params.id);
     if (!deletedTransaction) {
       return res.status(404).json({ error: 'Transaction not found' });
     }

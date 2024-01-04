@@ -17,7 +17,7 @@ app.use(express.json());
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 connectDB()
-app.use("/wallet",walletRoutes)
+app.use("/wallet", walletRoutes)
 
 // Starting the Game of Travelport 
 let AirService = uAPI.createAirService(
@@ -60,7 +60,15 @@ app.post('/shop-oneway', async (req, response) => {
         console.log("I am params", params);
 
         const data = await AirService.shop(params);
-
+        // Check if res is an array and each element is an object
+        if (Array.isArray(data) && data.every(item => typeof item === 'object' && item !== null)) {
+            // Add "flightType": "OneWay" to each object in the array
+            data.forEach(item => {
+                item.flightType = "OneWay";
+            });
+        } else {
+            console.error('Unexpected data structure:', data);
+        }
         return response.json(data);
     } catch (err) {
         console.error('Error:', err);
@@ -76,6 +84,7 @@ app.post('/shop-rounded', async (req, response) => {
         if (!from || !to || !departureDate || !returnDate) {
             return response.status(400).json({ error: 'Missing required parameters' });
         }
+
 
         const params = {
             legs: [
@@ -101,10 +110,20 @@ app.post('/shop-rounded', async (req, response) => {
         };
 
         const data = await AirService.shop(params);
+        // Check if res is an array and each element is an object
+        if (Array.isArray(data) && data.every(item => typeof item === 'object' && item !== null)) {
+            // Add "flightType": "Rounded" to each object in the array
+            data.forEach(item => {
+                item.flightType = "Rounded";
+            });
+        } else {
+            console.error('Unexpected data structure:', data);
+        }
+
         return response.json(data);
     } catch (err) {
         console.error('Error:', err);
-        return response.status(500).json({ error: 'An error occurred' });
+        return response.status(500).json({ error: 'An error occurred', err });
     }
 });
 
@@ -113,7 +132,6 @@ app.post('/shop-multi', async (req, response) => {
     try {
         const { routes } = req.body;
 
-        console.log(req.body);
         if (!Array.isArray(routes) || routes.length === 0) {
             return response.status(400).json({ error: 'Invalid or empty routes array' });
         }
@@ -124,24 +142,6 @@ app.post('/shop-multi', async (req, response) => {
             departureDate: route.depart,
         }));
         const params = {
-            // legs: [
-
-            //     {
-            //         from: 'MUX',
-            //         to: 'DXB',
-            //         departureDate: '2024-02-10'
-            //     },
-            //     {
-            //         from: 'DXB',
-            //         to: 'MUX',
-            //         departureDate: '2024-02-20'
-            //     },
-            //     {
-            //         from: 'MUX',
-            //         to: 'JFK',
-            //         departureDate: '2024-02-24'
-            //     },
-            // ],
             legs,
             passengers: {
                 ADT: 1,
@@ -154,6 +154,15 @@ app.post('/shop-multi', async (req, response) => {
         };
 
         const data = await AirService.shop(params);
+        // Check if res is an array and each element is an object
+        if (Array.isArray(data) && data.every(item => typeof item === 'object' && item !== null)) {
+            // Add "flightType": "MultiCity" to each object in the array
+            data.forEach(item => {
+                item.flightType = "MultiCity";
+            });
+        } else {
+            console.error('Unexpected data structure:', data);
+        }
         return response.json(data);
     } catch (err) {
         console.error('Error:', err);
