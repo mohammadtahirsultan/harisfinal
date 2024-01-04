@@ -121,24 +121,6 @@ app.post('/shop-multi', async (req, response) => {
             departureDate: route.depart,
         }));
         const params = {
-            // legs: [
-
-            //     {
-            //         from: 'MUX',
-            //         to: 'DXB',
-            //         departureDate: '2024-02-10'
-            //     },
-            //     {
-            //         from: 'DXB',
-            //         to: 'MUX',
-            //         departureDate: '2024-02-20'
-            //     },
-            //     {
-            //         from: 'MUX',
-            //         to: 'JFK',
-            //         departureDate: '2024-02-24'
-            //     },
-            // ],
             legs,
             passengers: {
                 ADT: 1,
