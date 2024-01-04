@@ -5,6 +5,7 @@ const cors = require("cors")
 const bodyParser = require('body-parser');
 const { connectDB } = require('./src/database/db');
 const walletRoutes = require('./src/routes/wallet');
+// const { processDatesAndTimes } = require('./src/utils/FlightsUtilityFunctionsKS/FlightsUtils');
 
 const app = express()
 
@@ -39,24 +40,27 @@ app.post('/shop-oneway', async (req, response) => {
             return response.status(400).json({ error: 'Missing required parameters' });
         }
         const params = {
-            legs: [
-                {
-                    from,
-                    to,
-                    departureDate,
-                },
-            ],
+        legs: [
+            {
+                from,
+                to,
+                departureDate,
+            }
+        ],
             passengers: {
                 ADT: 1,
             },
-            cabins: [cabin],
+            cabins: ["Economy"],
             pricing: {
                 currency: 'PKR',
             },
 
         };
 
+        console.log("I am params", params);
+
         const data = await AirService.shop(params);
+
         return response.json(data);
     } catch (err) {
         console.error('Error:', err);
