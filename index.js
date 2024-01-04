@@ -129,7 +129,6 @@ app.post('/shop-multi', async (req, response) => {
     try {
         const { routes } = req.body;
 
-        console.log(req.body);
         if (!Array.isArray(routes) || routes.length === 0) {
             return response.status(400).json({ error: 'Invalid or empty routes array' });
         }
