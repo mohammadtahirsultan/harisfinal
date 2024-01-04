@@ -57,6 +57,15 @@ app.post('/shop-oneway', async (req, response) => {
         };
 
         const data = await AirService.shop(params);
+        // Check if res is an array and each element is an object
+        if (Array.isArray(data) && data.every(item => typeof item === 'object' && item !== null)) {
+            // Add "flightType": "OneWay" to each object in the array
+            data.forEach(item => {
+                item.flightType = "OneWay";
+            });
+        } else {
+            console.error('Unexpected data structure:', data);
+        }
         return response.json(data);
     } catch (err) {
         console.error('Error:', err);
@@ -98,6 +107,16 @@ app.post('/shop-rounded', async (req, response) => {
         };
 
         const data = await AirService.shop(params);
+        // Check if res is an array and each element is an object
+        if (Array.isArray(data) && data.every(item => typeof item === 'object' && item !== null)) {
+            // Add "flightType": "OneWay" to each object in the array
+            data.forEach(item => {
+                item.flightType = "Rounded";
+            });
+        } else {
+            console.error('Unexpected data structure:', data);
+        }
+
         return response.json(data);
     } catch (err) {
         console.error('Error:', err);
@@ -133,6 +152,15 @@ app.post('/shop-multi', async (req, response) => {
         };
 
         const data = await AirService.shop(params);
+        // Check if res is an array and each element is an object
+        if (Array.isArray(data) && data.every(item => typeof item === 'object' && item !== null)) {
+            // Add "flightType": "OneWay" to each object in the array
+            data.forEach(item => {
+                item.flightType = "MultiCity";
+            });
+        } else {
+            console.error('Unexpected data structure:', data);
+        }
         return response.json(data);
     } catch (err) {
         console.error('Error:', err);
