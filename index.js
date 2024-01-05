@@ -5,6 +5,7 @@ const cors = require("cors")
 const bodyParser = require('body-parser');
 const { connectDB } = require('./src/database/db');
 const walletRoutes = require('./src/routes/wallet');
+const priceGroupRoutes = require('./src/routes/pricegroup');
 // const { processDatesAndTimes } = require('./src/utils/FlightsUtilityFunctionsKS/FlightsUtils');
 
 const app = express()
@@ -18,6 +19,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 connectDB()
 app.use("/wallet", walletRoutes)
+app.use("/price-group", priceGroupRoutes)
 
 // Starting the Game of Travelport 
 let AirService = uAPI.createAirService(
